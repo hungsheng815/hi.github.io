@@ -3,8 +3,10 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>個人簡歷 - Your Name</title>
+  <title>個人簡歷 - 哈囉</title>
   <meta name="description" content="個人履歷單頁網站 - 包含關於我、技能、經歷與聯絡方式">
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&family=Playfair+Display:wght@400;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="css/styles.css">
   <link rel="icon" href="favicon.ico">
 </head>
@@ -27,40 +29,41 @@
   <main>
     <section class="hero container" id="home">
       <div class="hero-content">
-        <h1>嗨，我是 <span>你的名字</span></h1>
-        <p>前端工程師 / 設計師 / 軟體開發者 —— 熱衷於打造直覺且高效的網頁體驗。</p>
-        <p class="hero-cta"><a class="btn" href="#contact">聯絡我</a></p>
+        <div class="hero-text">
+          <h1>嗨，我是 <span>林汯陞</span></h1>
+          <p>熱愛音樂</p>
+          <p class="hero-cta"><a class="btn" href="#contact">聯絡我</a></p>
+        </div>
+        <div class="hero-avatar">
+          <img src="assets/pict.jpg" alt="林汯陞 的頭像" class="avatar" width="140" height="140" loading="lazy" />
+        </div>
       </div>
     </section>
 
     <section class="about container" id="about">
       <h2>關於我</h2>
-      <p>您好，我是前端工程師，專注於 React/Vue、可訪問性、以及效能優化。在過往專案中，負責 UI、前端架構與跨團隊協作。</p>
+      <p>目前就讀輔大醫資</p>
     </section>
 
     <section class="skills container" id="skills">
       <h2>技能</h2>
       <div class="skills-grid">
         <div class="skill">
-          <h3>前端</h3>
+          <h3>DJ</h3>
           <ul>
-            <li>HTML5, CSS3 (Flexbox, Grid)</li>
-            <li>JavaScript (ES6+), TypeScript</li>
-            <li>React / Vue</li>
+            <li>放慢搖</li>
           </ul>
         </div>
         <div class="skill">
-          <h3>工具</h3>
+          <h3>管樂</h3>
           <ul>
-            <li>Webpack / Vite</li>
-            <li>Git, CI/CD</li>
+            <li>小喇叭</li>
           </ul>
         </div>
         <div class="skill">
           <h3>設計</h3>
           <ul>
-            <li>Figma, UI 設計基礎</li>
-            <li>可用性/可訪問性 (a11y)</li>
+            <li>3D列印</li>
           </ul>
         </div>
       </div>
@@ -70,15 +73,19 @@
       <h2>經歷</h2>
       <div class="timeline">
         <article class="timeline-item">
-          <h3>前端工程師 — Company A</h3>
-          <p class="meta">2021 - 現在</p>
-          <p>負責 SPA 建置、元件庫開發與前端效能優化，並帶領小型團隊。</p>
+          <h3>數音社</h3>
+          <p class="meta">2025 - 現在</p>
         </article>
 
         <article class="timeline-item">
-          <h3>網頁工程師 — Company B</h3>
+          <h3>嘻研社</h3>
+          <p class="meta">2022 - 2024</p>
+        </article>
+
+        <article class="timeline-item">
+          <h3>管樂團</h3>
           <p class="meta">2019 - 2021</p>
-          <p>參與電商平台開發，進行 RWD 支援與使用者互動設計。</p>
+          
         </article>
       </div>
     </section>
@@ -87,19 +94,8 @@
       <h2>聯絡方式</h2>
       <p>有興趣合作或只是聊聊嗎？歡迎透過以下方式聯絡我。</p>
       <ul class="contact-list">
-        <li>Email: <a href="mailto:your.email@example.com">your.email@example.com</a></li>
-        <li>LinkedIn: <a href="#">LinkedIn/yourprofile</a></li>
-        <li>GitHub: <a href="#">github.com/yourusername</a></li>
+        <li>Email: <a href="mailto:414570320@m365.fju.edu.tw">414570320@m365.fju.edu.tw</a></li>
       </ul>
-      <form class="contact-form" action="mailto:your.email@example.com" method="POST" enctype="text/plain">
-        <label for="name">姓名</label>
-        <input type="text" id="name" name="name" placeholder="您的名字" required>
-
-        <label for="message">訊息</label>
-        <textarea id="message" name="message" rows="4" placeholder="寫下您的訊息..." required></textarea>
-
-        <button type="submit" class="btn">送出</button>
-      </form>
     </section>
   </main>
 

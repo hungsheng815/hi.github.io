@@ -75,18 +75,16 @@ document.addEventListener('DOMContentLoaded', function(){
   const themeToggle = document.getElementById('theme-toggle');
   const ROOT = document.documentElement;
   function applyTheme(theme){
-    if(theme === 'light'){
-      ROOT.setAttribute('data-theme', 'light');
-      themeToggle.setAttribute('aria-pressed', 'true');
-    } else {
-      ROOT.removeAttribute('data-theme');
-      themeToggle.setAttribute('aria-pressed', 'false');
-    }
+    // Normalize to 'light' or 'dark'
+    const t = theme === 'light' ? 'light' : 'dark';
+    ROOT.setAttribute('data-theme', t);
+    themeToggle.setAttribute('aria-pressed', t === 'light' ? 'true' : 'false');
+    localStorage.setItem('theme', t);
   }
 
   function initTheme(){
     const saved = localStorage.getItem('theme');
-    if(saved){
+    if(saved === 'light' || saved === 'dark'){
       applyTheme(saved);
     } else if(window.matchMedia && window.matchMedia('(prefers-color-scheme: light)').matches){
       applyTheme('light');
@@ -99,10 +97,9 @@ document.addEventListener('DOMContentLoaded', function(){
 
   if(themeToggle){
     themeToggle.addEventListener('click', () => {
-      const isLight = ROOT.getAttribute('data-theme') === 'light';
-      const newTheme = isLight ? 'dark' : 'light';
-      applyTheme(newTheme === 'light' ? 'light' : 'dark');
-      localStorage.setItem('theme', newTheme);
+      const current = ROOT.getAttribute('data-theme');
+      const newTheme = current === 'light' ? 'dark' : 'light';
+      applyTheme(newTheme);
     });
   }
 });

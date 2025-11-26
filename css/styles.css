@@ -24,6 +24,18 @@
   --bg2: #f2f6fa;
 }
 
+/* Explicit dark theme overrides - mirror of default but useful for explicit attribute */
+:root[data-theme='dark']{
+  --bg: #061426;
+  --card: #071826;
+  --muted: #a0b0bd;
+  --accent: #5dd9c1;
+  --accent-2: #6aa6ff;
+  --text: #e6eef6;
+  --glass: rgba(255,255,255,0.03);
+  --bg2: #071627;
+}
+
 /* Smooth theme transition */
 * { transition: background-color .22s ease, color .22s ease, border-color .22s ease, box-shadow .22s ease; }
 
@@ -49,8 +61,15 @@ body{ font-family: Inter, system-ui, -apple-system, 'Segoe UI', Roboto, 'Helveti
 .theme-toggle .icon-sun{ display:none; }
 .theme-toggle .icon-moon{ display:inline-block; }
 
+.theme-toggle{ margin-left: 8px; }
+.theme-toggle:hover{ background: rgba(255,255,255,0.02); transform: translateY(-2px); }
+.theme-toggle:active{ transform: translateY(0); }
+.theme-toggle svg{ display:block; }
+
 :root[data-theme='light'] .theme-toggle .icon-sun{ display:inline-block; }
 :root[data-theme='light'] .theme-toggle .icon-moon{ display:none; }
+:root[data-theme='dark'] .theme-toggle .icon-sun{ display:none; }
+:root[data-theme='dark'] .theme-toggle .icon-moon{ display:inline-block; }
 
 .hero{ padding: 6.5rem 2rem; text-align:left; }
 .hero-content{ display:flex; gap: 2rem; align-items: center; padding: .75rem 0; }
@@ -76,7 +95,7 @@ body{ font-family: Inter, system-ui, -apple-system, 'Segoe UI', Roboto, 'Helveti
 
 .timeline-item{ position: relative; min-width: 220px; margin-top: -26px; padding: 1rem 1.25rem; border-radius: 12px; background: var(--card); border: 1px solid var(--glass); box-shadow: 0 10px 30px rgba(7,12,18,0.5); z-index: 1; }
 .timeline-item{ transition: transform .24s ease, box-shadow .24s ease, opacity .24s ease; }
-.timeline-item::before{ content: ''; position: absolute; top: 50%; left: -22px; transform: translateY(-50%); width: 14px; height: 14px; border-radius: 50%; background: var(--accent); box-shadow: 0 0 0 6px rgba(13, 24, 30, 0.6); z-index: 20; pointer-events: none; }
+.timeline-item::before{ content: ''; position: absolute; top: 50%; left: -22px; transform: translateY(-50%); width: 14px; height: 14px; border-radius: 50%; background: var(--accent); box-shadow: 0 0 0 6px rgba(13, 24, 30, 0.6); z-index: 20; pointer-events: none; display: none !important; }
 .timeline-item.left{ grid-column: 1 / 2; justify-self: end; }
 .timeline-item.left::before{ right: -28px; }
 .timeline-item.right{ grid-column: 2 / 3; justify-self: start; }
@@ -105,6 +124,7 @@ body{ font-family: Inter, system-ui, -apple-system, 'Segoe UI', Roboto, 'Helveti
   .timeline-item{ width: 100%; margin: 0; transform:none; justify-self: stretch; }
   /* Place the dot slightly above and to the left on small screens for better appearance */
   .timeline-item::before{ left: -18px; top: 18px; transform: none; }
+  .timeline-item::before{ display: none !important; }
 }
 
 /* Reveal animations */

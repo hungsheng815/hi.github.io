@@ -47,6 +47,21 @@ me-web/
 - 預設會依作業系統偏好 (prefers-color-scheme) 或上次使用的選擇自動載入。
 - 若要調整色彩，編輯 `:root` 與 `:root[data-theme='light']` 中的 CSS 變數（如 `--accent`, `--bg` 等）。
 
+現在有三種主題情境：
+- 預設（深色）: 當 `data-theme='dark'` 或沒有 `data-theme` 時；
+- 淺色（Light）: 當 `data-theme='light'`；
+- 明確的深色模式: 當 `data-theme='dark'`。
+
+你可以在瀏覽器 console 以程式方式切換或重置：
+```
+// 設為淺色
+document.documentElement.setAttribute('data-theme', 'light')
+// 設為深色
+document.documentElement.setAttribute('data-theme', 'dark')
+// 清除偏好（將依系統或預設）
+localStorage.removeItem('theme')
+```
+
 ### 切換與重置
 
 - 頁面按鈕會自動切換，你也可以在瀏覽器中更改偏好：

@@ -47,16 +47,28 @@ document.addEventListener('DOMContentLoaded', function(){
   // Mark main sections for reveal
   document.querySelectorAll('main > section').forEach(s => s.classList.add('reveal'));
 
-  // Reveal on scroll using IntersectionObserver
-  const revealObserver = new IntersectionObserver((entries) => {
-    entries.forEach(entry => {
-      if (entry.isIntersecting) {
-        entry.target.classList.add('revealed');
-      }
-    });
-  }, { threshold: 0.15 });
+  // Reveal on scroll using IntersectionObserver, but respect prefers-reduced-motion and narrow viewports
+  const prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const smallViewport = window.matchMedia('(max-width: 600px)').matches;
 
-  document.querySelectorAll('.reveal').forEach(el => revealObserver.observe(el));
+  const allRevealEls = Array.from(document.querySelectorAll('.reveal'));
+  if (prefersReduced || smallViewport) {
+    // Immediately reveal everything without animation for accessibility and performance
+    allRevealEls.forEach(el => el.classList.add('revealed'));
+  } else {
+    const revealObserver = new IntersectionObserver((entries, observer) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('revealed');
+          // Add subtle animate classes for extra polish
+          entry.target.classList.add('animate-fade');
+          // Stop observing after reveal to improve performance
+          observer.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.15 });
+    allRevealEls.forEach((el) => revealObserver.observe(el));
+  }
 
   // Active nav highlight (observe sections)
   const navLinks = document.querySelectorAll('.primary-nav a');

@@ -89,6 +89,16 @@ body{ font-family: Inter, system-ui, -apple-system, 'Segoe UI', Roboto, 'Helveti
 .skill{ background: var(--card); border-radius:12px; padding:1rem; border: 1px solid var(--glass); box-shadow: 0 6px 24px rgba(4,9,14,0.5); }
 .skill h3{ margin-bottom:.5rem; }
 
+/* Projects / Cards */
+.projects-grid{ display:grid; grid-template-columns: repeat(3, 1fr); gap: 1.25rem; margin-top: 1rem; }
+.project-card{ background: var(--card); border-radius: 12px; overflow: hidden; border: 1px solid var(--glass); box-shadow: 0 10px 30px rgba(7,12,18,0.45); display:flex; flex-direction:column; transition: transform .18s ease, box-shadow .18s ease; }
+.project-card:hover{ transform: translateY(-6px); box-shadow: 0 20px 40px rgba(7,12,18,0.6); }
+.project-image{ width:100%; height: 160px; object-fit:cover; display:block; }
+.project-body{ padding: 1rem; flex: 1; display:flex; flex-direction:column; gap:.5rem; }
+.project-body h3{ margin:0; font-size: 1.1rem; }
+.project-body p{ margin:0; color:var(--muted); }
+.project-body .btn{ align-self:flex-start; }
+
 .timeline{ position: relative; display:flex; gap: 2rem; padding: 3rem 0; align-items: center; justify-content: center; flex-wrap: nowrap; overflow: visible; min-height: 160px; }
 .timeline::before{ content: ''; position:absolute; left: 6%; right: 6%; top: 50%; transform: translateY(-50%); height: 4px; background: linear-gradient(90deg, rgba(93,217,193,0.14), rgba(106,166,255,0.14)); z-index: 0; border-radius: 2px; pointer-events: none; }
 .timeline::before{ pointer-events: none; }
@@ -127,6 +137,16 @@ body{ font-family: Inter, system-ui, -apple-system, 'Segoe UI', Roboto, 'Helveti
   .timeline-item::before{ display: none !important; }
 }
 
+@media (max-width: 900px){
+  .projects-grid{ grid-template-columns: repeat(2, 1fr); }
+}
+
+@media (max-width: 600px){
+  .projects-grid{ grid-template-columns: 1fr; }
+  .project-image{ height: 200px; }
+  .project-card{ transform:none; }
+}
+
 /* Additional narrow screen tweaks for <600px */
 @media (max-width: 600px){
   .hero-content{ gap: 1rem; }
@@ -146,14 +166,62 @@ body{ font-family: Inter, system-ui, -apple-system, 'Segoe UI', Roboto, 'Helveti
 @keyframes fadeUp { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: translateY(0); } }
 @keyframes pop { from { transform: scale(.96); opacity: .95 } to { transform: scale(1); opacity: 1 } }
 @keyframes avatarPulse { 0% { transform: scale(1) } 50% { transform: scale(1.03) } 100% { transform: scale(1) } }
+@keyframes slideRight { from { transform: translateX(-8px); opacity: 0 } to { transform: translateX(0); opacity: 1 } }
 
 .animate-fade{ animation: fadeUp .6s cubic-bezier(.2,.8,.2,1) both; }
 .animate-pop{ animation: pop .28s cubic-bezier(.2, .9, .2, 1) both; }
 .avatar.animate-pulse{ animation: avatarPulse 3.2s ease-in-out infinite; }
+.animate-slide-right{ animation: slideRight .42s cubic-bezier(.2,.85,.2,1) both; }
+
+/* Avatar modal styles */
+.sr-only{ position:absolute !important; width:1px !important; height:1px !important; padding:0 !important; margin:-1px !important; overflow:hidden !important; clip:rect(0 0 0 0) !important; clip-path: inset(50%) !important; white-space:nowrap !important; border:0 !important; }
+.avatar-modal{ position: fixed; inset: 0; display:none; align-items:center; justify-content:center; z-index:2000; }
+.avatar-modal[aria-hidden="false"], .avatar-modal.open{ display:flex; }
+.avatar-modal-overlay{ position:absolute; inset: 0; background: rgba(2,6,12,0.6); backdrop-filter: blur(3px); }
+.avatar-modal-content{ position: relative; max-width: 92vw; max-height: 92vh; border-radius: 12px; overflow: hidden; z-index:2001; display:flex; align-items:center; justify-content:center; padding: 1rem; }
+.avatar-modal-close{ position:absolute; top: 8px; right: 8px; background: rgba(255,255,255,0.02); border: none; color: var(--text); font-size: 1.1rem; padding:.4rem .6rem; border-radius:8px; cursor:pointer; z-index:2010; }
+.avatar-modal-close:focus{ outline: 3px solid rgba(93,217,193,0.12); }
+.avatar-full{ max-width: 100%; max-height: 100%; display:block; border-radius: 8px; box-shadow: 0 14px 40px rgba(3,7,12,0.6); transform: translateY(6px) scale(.98); transition: transform .28s cubic-bezier(.2,.9,.2,1), filter .2s ease; }
+.avatar-modal[aria-hidden="false"] .avatar-full, .avatar-modal.open .avatar-full{ transform: translateY(0) scale(1); }
+
+/* Add a subtle rotate in desktop for flair; disable on reduced motion */
+@media (min-width: 900px) {
+  .avatar-modal[aria-hidden="false"] .avatar-full{ transform: translateY(0) scale(1) rotate(-1deg); transition: transform .36s cubic-bezier(.2,.9,.2,1); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .avatar-full{ transition: none !important; }
+  .avatar-modal[aria-hidden="false"] .avatar-full{ transform: none !important; }
+}
+
+/* Mobile: image padding and full-screen experience */
+@media (max-width: 600px){
+  .avatar-modal-content{ padding: .5rem; border-radius:6px; }
+  .avatar-full{ border-radius: 6px; }
+}
 
 /* Respect users who prefer reduced motion */
 @media (prefers-reduced-motion: reduce) {
   .reveal, .animate-fade, .animate-pop, .avatar.animate-pulse { transition: none !important; animation: none !important; }
+}
+
+/* Modal enter/exit animations */
+@keyframes modalOverlayIn { from { opacity: 0 } to { opacity: 1 } }
+@keyframes modalOverlayOut { from { opacity: 1 } to { opacity: 0 } }
+@keyframes modalContentIn { from { transform: translateY(12px) scale(.98); opacity: 0 } to { transform: translateY(0) scale(1); opacity: 1 } }
+@keyframes modalContentOut { from { transform: translateY(0) scale(1); opacity: 1 } to { transform: translateY(12px) scale(.98); opacity: 0 } }
+
+.avatar-modal.open .avatar-modal-overlay{ animation: modalOverlayIn .28s ease both; }
+.avatar-modal.closing .avatar-modal-overlay{ animation: modalOverlayOut .24s ease both; }
+.avatar-modal.open .avatar-modal-content{ animation: modalContentIn .32s cubic-bezier(.2,.85,.2,1) both; }
+.avatar-modal.closing .avatar-modal-content{ animation: modalContentOut .28s cubic-bezier(.2,.85,.2,1) both; }
+
+/* If prefers-reduced-motion or small viewport, do not animate modal */
+@media (prefers-reduced-motion: reduce), (max-width: 600px) {
+  .avatar-modal.open .avatar-modal-overlay,
+  .avatar-modal.open .avatar-modal-content,
+  .avatar-modal.closing .avatar-modal-overlay,
+  .avatar-modal.closing .avatar-modal-content{ animation: none !important; }
 }
 
 /* Small accessibility touches */
@@ -161,3 +229,11 @@ a:focus{ outline: 3px dashed rgba(93,217,193,0.4); outline-offset: 2px; }
 
 /* Utility */
 .meta{ color:var(--muted); }
+
+/* Additional reveal and UI animations */
+.project-card.revealed{ animation: fadeUp .5s cubic-bezier(.2,.8,.2,1) both; }
+.skill.revealed{ animation: fadeUp .46s cubic-bezier(.2,.8,.2,1) both; }
+.primary-nav a.revealed{ animation: fadeUp .36s cubic-bezier(.2,.8,.2,1) both; }
+.animate-slide-right{ animation: slideRight .42s cubic-bezier(.2,.85,.2,1) both; }
+.btn.animate-pop{ animation: pop .28s cubic-bezier(.2, .9, .2, 1) both; }
+

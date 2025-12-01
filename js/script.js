@@ -44,14 +44,23 @@ document.addEventListener('DOMContentLoaded', function(){
     item.classList.add('reveal');
   });
 
-  // Mark main sections for reveal
+  // Mark main sections and common elements for reveal
   document.querySelectorAll('main > section').forEach(s => s.classList.add('reveal'));
+  // Add reveal to project cards, skill cards, nav links, buttons and logo for staggered animations
+  document.querySelectorAll('.project-card, .skill, .primary-nav a, .btn, .logo, .hero-avatar, .timeline-item').forEach(el => el.classList.add('reveal'));
 
   // Reveal on scroll using IntersectionObserver, but respect prefers-reduced-motion and narrow viewports
   const prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   const smallViewport = window.matchMedia('(max-width: 600px)').matches;
 
   const allRevealEls = Array.from(document.querySelectorAll('.reveal'));
+  // Apply stagger delay for nicer entrance (only if can animate)
+  if(!prefersReduced && !smallViewport){
+    allRevealEls.forEach((el, i) => {
+      const delay = (i % 6) * 80; // mod 6 to keep delays within a reasonable range per row
+      el.style.animationDelay = delay + 'ms';
+    });
+  }
   if (prefersReduced || smallViewport) {
     // Immediately reveal everything without animation for accessibility and performance
     allRevealEls.forEach(el => el.classList.add('revealed'));
@@ -114,4 +123,104 @@ document.addEventListener('DOMContentLoaded', function(){
       applyTheme(newTheme);
     });
   }
+  // Add a small pop animation to the theme toggle on click
+  if (themeToggle){
+    themeToggle.addEventListener('click', () => {
+      themeToggle.classList.add('animate-pop');
+      setTimeout(()=> themeToggle.classList.remove('animate-pop'), 350);
+    });
+  }
+
+  // Avatar modal open/close
+  const avatar = document.querySelector('.hero-avatar img');
+  const modal = document.getElementById('avatar-modal');
+  const modalOverlay = document.querySelector('.avatar-modal-overlay');
+  const modalClose = document.querySelector('.avatar-modal-close');
+  const modalImg = document.querySelector('.avatar-full');
+
+  function openModal(src){
+    if(!modal) return;
+    // If a src is provided, use it; otherwise fall back to avatar if available
+    if(src && modalImg){
+      modalImg.src = src;
+    } else if(avatar && modalImg){
+      modalImg.src = avatar.src;
+    }
+    modal.setAttribute('aria-hidden', 'false');
+    modal.classList.remove('closing');
+    modal.classList.add('open');
+    // trap focus to close
+    modalClose.focus();
+    document.body.style.overflow = 'hidden';
+  }
+
+  function closeModal(){
+    if(!modal) return;
+    // If reduced motion or small viewport, skip exit animation
+    if (prefersReduced || smallViewport){
+      modal.classList.remove('open');
+      modal.setAttribute('aria-hidden', 'true');
+      document.body.style.overflow = '';
+      if(avatar) avatar.focus?.();
+      return;
+    }
+    modal.classList.remove('open');
+    modal.classList.add('closing');
+    // wait for animation end on content to finalize close
+    const content = modal.querySelector('.avatar-modal-content');
+    if(content){
+      const onAnimEnd = (e) => {
+        if(e.target !== content) return;
+        content.removeEventListener('animationend', onAnimEnd);
+        modal.classList.remove('closing');
+        modal.setAttribute('aria-hidden', 'true');
+        document.body.style.overflow = '';
+        if(avatar) avatar.focus?.();
+      };
+      content.addEventListener('animationend', onAnimEnd);
+      // Fallback in case animationend doesn't fire
+      setTimeout(() => {
+        if(modal.classList.contains('closing')){
+          modal.classList.remove('closing');
+          modal.setAttribute('aria-hidden', 'true');
+          document.body.style.overflow = '';
+          if(avatar) avatar.focus?.();
+        }
+      }, 400);
+    } else {
+      modal.setAttribute('aria-hidden', 'true');
+      document.body.style.overflow = '';
+      if(avatar) avatar.focus?.();
+    }
+  }
+
+  if(avatar){
+    avatar.style.cursor = 'pointer';
+    avatar.addEventListener('click', () => openModal(avatar.src));
+    avatar.addEventListener('keydown', (e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); openModal(avatar.src); } });
+  }
+  if(modalOverlay) modalOverlay.addEventListener('click', closeModal);
+  if(modalClose) modalClose.addEventListener('click', closeModal);
+  // close on escape
+  document.addEventListener('keydown', (e) => { if(e.key === 'Escape') closeModal(); });
+
+  // Prevent animation on small screens (respect earlier boolean)
+  if(smallViewport){
+    if(modal) modal.style.animation = 'none';
+  }
+
+  // Project card 'View' buttons: optionally open image in modal
+  document.querySelectorAll('.project-card .btn').forEach(btn => {
+    btn.addEventListener('click', (e) => {
+      e.preventDefault();
+      const card = btn.closest('.project-card');
+      if(card){
+        const img = card.querySelector('.project-image');
+        if(img){
+          openModal(img.src);
+        }
+      }
+    });
+  });
 });
+
